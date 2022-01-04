@@ -1,0 +1,26 @@
+preprocess:
+  cmd: python -m spacy run preprocess
+  script:
+    - python scripts/preprocess.py assets/train_raw.jsonl corpus/train.spacy --text-only
+    - python scripts/preprocess.py assets/test_annotated.jsonl corpus/test_annotated.spacy
+  deps:
+    - path: assets/train_raw.jsonl
+      md5: a8bc3a6144d894a3431d40e409c7bfa1
+    - path: assets/test_annotated.jsonl
+      md5: bce333ca9e7c9a57dea7f980d292a0b8
+  outs:
+    - path: corpus/train_raw.spacy
+      md5: 0dea34b4a366ad339a231bc1fa117152
+    - path: corpus/test_annotated.spacy
+      md5: f460ef111bbc85843ff22918ee2469f1
+  spacy_version: 3.2.1
+  spacy_git_version: 800737b41
+install:
+  cmd: python -m spacy run install
+  script:
+    - pipenv install
+    - python -m spacy download en_core_web_lg
+  deps: []
+  outs: []
+  spacy_version: 3.2.1
+  spacy_git_version: 800737b41
