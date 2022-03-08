@@ -1,58 +1,96 @@
 preprocess:
   cmd: python -m spacy run preprocess
   script:
-    - python scripts/preprocess.py assets/fashion_brands_training.jsonl corpus/fashion_brands_training.spacy
-    - python scripts/preprocess.py assets/fashion_brands_eval.jsonl corpus/fashion_brands_eval.spacy
+    - python scripts/preprocess.py assets/project_raw.json corpus/project_raw.spacy
   deps:
-    - path: assets/fashion_brands_training.jsonl
-      md5: 20fdd12be1c51e60f3993560c3833b64
-    - path: assets/fashion_brands_eval.jsonl
-      md5: 3d16a4c137e5e812aa4b74f672af2413
+    - path: assets/project_raw.json
+      md5: c194b79c38c4c53c0ff686cdcef7fa4c
     - path: scripts/preprocess.py
-      md5: a17edbf91634f190f329a2df966d697d
+      md5: 6c9f691a3b3ffe6225679247f08eec15
   outs:
-    - path: corpus/fashion_brands_training.spacy
-      md5: ea3cf954e39cb66ab9e1706288b8e2ed
-    - path: corpus/fashion_brands_eval.spacy
-      md5: a44c64e73a65eb8a34185ad6c83df25a
-  spacy_version: 3.2.1
-  spacy_git_version: 800737b41
+    - path: corpus/project_raw.spacy
+      md5: 86f8d7f8c8553435db30297edd26e5c2
+  spacy_version: 3.2.3
+  spacy_git_version: 99425de36
 install:
   cmd: python -m spacy run install
   script:
     - pipenv install
-    - python -m spacy download en_core_web_lg
   deps: []
   outs: []
-  spacy_version: 3.2.1
-  spacy_git_version: 800737b41
+  spacy_version: 3.2.3
+  spacy_git_version: 99425de36
 train:
   cmd: python -m spacy run train
   script:
-    - python -m spacy train configs/config.cfg --output training/ --paths.train corpus/fashion_brands_training.spacy
-      --paths.dev corpus/fashion_brands_eval.spacy
+    - python -m spacy train configs/config.cfg --output training/ --paths.train corpus/project_training.spacy
+      --paths.dev corpus/project_eval.spacy
   deps:
-    - path: corpus/fashion_brands_training.spacy
-      md5: ea3cf954e39cb66ab9e1706288b8e2ed
-    - path: corpus/fashion_brands_eval.spacy
-      md5: a44c64e73a65eb8a34185ad6c83df25a
+    - path: corpus/project_training.spacy
+      md5: 94ddf4cd7f7b2a2a15218dd0db1db493
+    - path: corpus/project_eval.spacy
+      md5: c64be7969d94ef0ef85fe2f51a61df37
   outs:
     - path: training/model-best
-      md5: e3f7338cd444697ca106c7d711730656
-  spacy_version: 3.2.1
-  spacy_git_version: 800737b41
+      md5: 3d3888dbaaf3fb291c22dd11a1593d74
+  spacy_version: 3.2.3
+  spacy_git_version: 99425de36
 evaluate:
   cmd: python -m spacy run evaluate
   script:
-    - python -m spacy evaluate training/model-best corpus/fashion_brands_eval.spacy
-      --output training/metrics.json
+    - python -m spacy evaluate training/model-best corpus/project_eval.spacy --output
+      training/metrics.json
   deps:
-    - path: corpus/fashion_brands_eval.spacy
-      md5: a44c64e73a65eb8a34185ad6c83df25a
+    - path: corpus/project_eval.spacy
+      md5: c64be7969d94ef0ef85fe2f51a61df37
     - path: training/model-best
-      md5: e3f7338cd444697ca106c7d711730656
+      md5: 3d3888dbaaf3fb291c22dd11a1593d74
   outs:
     - path: training/metrics.json
-      md5: f0d7e95cc9c938216292b9f834ca791a
-  spacy_version: 3.2.1
-  spacy_git_version: 800737b41
+      md5: 63a1d7f4378a75a2a9ae441573cd480b
+  spacy_version: 3.2.3
+  spacy_git_version: 99425de36
+argument:
+  cmd: python -m spacy run argument
+  script:
+    - python scripts/argument.py assets/project.json corpus/argumented.spacy
+  deps:
+    - path: assets/project.json
+      md5: f8e3fdcb878ffec16d37f7f72e6d8f1c
+    - path: scripts/argument.py
+      md5: 1a8f1a3f75a131db570be1bf443c9808
+  outs:
+    - path: corpus/argumented.spacy
+      md5: 71e3365654ff3f5076208d0b05cf1a61
+  spacy_version: 3.2.0
+  spacy_git_version: 0fc3dee77
+augment:
+  cmd: python -m spacy run augment
+  script:
+    - python scripts/augment.py corpus/project_raw.spacy corpus/project_training.spacy
+      corpus/project_eval.spacy
+  deps:
+    - path: corpus/project_raw.spacy
+      md5: 86f8d7f8c8553435db30297edd26e5c2
+    - path: scripts/augment.py
+      md5: af21e77dc294a7aa805e6e79df0ec8ec
+  outs:
+    - path: corpus/project_training.spacy
+      md5: 94ddf4cd7f7b2a2a15218dd0db1db493
+    - path: corpus/project_eval.spacy
+      md5: c64be7969d94ef0ef85fe2f51a61df37
+  spacy_version: 3.2.3
+  spacy_git_version: 99425de36
+package:
+  cmd: python -m spacy run package
+  script:
+    - python -m spacy package training/model-best packages --name ner_project --version
+      0.0.1 --force
+  deps:
+    - path: training/model-best
+      md5: 3d3888dbaaf3fb291c22dd11a1593d74
+  outs:
+    - path: packages/en_ner_project-0.0.1/dist/en_ner_project-0.0.1.tar.gz
+      md5: aefed632d3a217618a8001651cf27f63
+  spacy_version: 3.2.3
+  spacy_git_version: 99425de36
