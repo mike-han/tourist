@@ -11,10 +11,9 @@ from spacy.util import filter_spans
 
 
 def get_widget_patters():
-  patterns = {"label": "WIDGET", "patterns": []}
+  patterns = {"label": "EXB_WIDGET", "patterns": []}
   with open("assets/widget_patterns.json", encoding="utf8") as f:
     widgets = json.loads(f.read())
-
     patterns["patterns"] = [widget["patterns"] for widget in widgets]
   return patterns
 
@@ -30,10 +29,6 @@ def process_text(text):
     doc = nlp(text)
     matches = matcher(doc)
     ents = [Span(doc, start, end, label=widget_pattern["label"]) for match_id, start, end in matches]
-    for ent in ents:
-        if(ent.orth_ == "I"):
-             print(f"Unexpect ent: {ent}")
-
     doc.ents = filter_spans(ents)
     return doc
 

@@ -6,16 +6,17 @@ preprocess:
     - path: assets/project_raw.json
       md5: c194b79c38c4c53c0ff686cdcef7fa4c
     - path: scripts/preprocess.py
-      md5: 6c9f691a3b3ffe6225679247f08eec15
+      md5: 9ee075d3353f263dee752beed80e76de
   outs:
     - path: corpus/project_raw.spacy
-      md5: 86f8d7f8c8553435db30297edd26e5c2
+      md5: 0b6b6ea91b657bbf01ac425244b29204
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
 install:
   cmd: python -m spacy run install
   script:
     - pipenv install
+    - python -m spacy download en_core_web_md
   deps: []
   outs: []
   spacy_version: 3.2.3
@@ -27,12 +28,12 @@ train:
       --paths.dev corpus/project_eval.spacy
   deps:
     - path: corpus/project_training.spacy
-      md5: 94ddf4cd7f7b2a2a15218dd0db1db493
+      md5: 6b2beea848ec920c693c30b960b0b617
     - path: corpus/project_eval.spacy
-      md5: c64be7969d94ef0ef85fe2f51a61df37
+      md5: 0fc369fdfd6c07b8bc30eadd42555073
   outs:
     - path: training/model-best
-      md5: 3d3888dbaaf3fb291c22dd11a1593d74
+      md5: 33a374810115c89dbf2ea7e8b90d05ac
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
 evaluate:
@@ -42,12 +43,12 @@ evaluate:
       training/metrics.json
   deps:
     - path: corpus/project_eval.spacy
-      md5: c64be7969d94ef0ef85fe2f51a61df37
+      md5: 0fc369fdfd6c07b8bc30eadd42555073
     - path: training/model-best
-      md5: 3d3888dbaaf3fb291c22dd11a1593d74
+      md5: 33a374810115c89dbf2ea7e8b90d05ac
   outs:
     - path: training/metrics.json
-      md5: 63a1d7f4378a75a2a9ae441573cd480b
+      md5: 9c6c9e82ddc572ccd1c8d0b1603a83e5
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
 argument:
@@ -71,14 +72,14 @@ augment:
       corpus/project_eval.spacy
   deps:
     - path: corpus/project_raw.spacy
-      md5: 86f8d7f8c8553435db30297edd26e5c2
+      md5: 0b6b6ea91b657bbf01ac425244b29204
     - path: scripts/augment.py
       md5: af21e77dc294a7aa805e6e79df0ec8ec
   outs:
     - path: corpus/project_training.spacy
-      md5: 94ddf4cd7f7b2a2a15218dd0db1db493
+      md5: 0359273fd8f77d609e5501933e5741f5
     - path: corpus/project_eval.spacy
-      md5: c64be7969d94ef0ef85fe2f51a61df37
+      md5: 08a16d326006c2bf45dc7766d934921a
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
 package:
@@ -88,9 +89,9 @@ package:
       0.0.1 --force
   deps:
     - path: training/model-best
-      md5: 3d3888dbaaf3fb291c22dd11a1593d74
+      md5: 33a374810115c89dbf2ea7e8b90d05ac
   outs:
     - path: packages/en_ner_project-0.0.1/dist/en_ner_project-0.0.1.tar.gz
-      md5: aefed632d3a217618a8001651cf27f63
+      md5: eb38c2dd4c4040c298a8a504ae72e849
   spacy_version: 3.2.3
   spacy_git_version: 99425de36

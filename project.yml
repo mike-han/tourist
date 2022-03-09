@@ -53,6 +53,7 @@ commands:
     help: "Install dependencies"
     script: 
       - "pipenv install"
+      # - "python -m spacy download en_core_web_md"
 
   - name: "preprocess"
     help: "Convert raw inputs into spaCy's binary format"
