@@ -16,7 +16,6 @@ install:
   cmd: python -m spacy run install
   script:
     - pipenv install
-    - python -m spacy download en_core_web_md
   deps: []
   outs: []
   spacy_version: 3.2.3
@@ -28,12 +27,12 @@ train:
       --paths.dev corpus/project_eval.spacy
   deps:
     - path: corpus/project_training.spacy
-      md5: 6b2beea848ec920c693c30b960b0b617
+      md5: e368c920ff02bf4b4de5d5d76ccc8103
     - path: corpus/project_eval.spacy
-      md5: 0fc369fdfd6c07b8bc30eadd42555073
+      md5: f5c37299586b7b400d745015e2854b3b
   outs:
     - path: training/model-best
-      md5: 33a374810115c89dbf2ea7e8b90d05ac
+      md5: 71b8725b21ab626ebed789f663657d46
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
 evaluate:
@@ -43,12 +42,12 @@ evaluate:
       training/metrics.json
   deps:
     - path: corpus/project_eval.spacy
-      md5: 0fc369fdfd6c07b8bc30eadd42555073
+      md5: f5c37299586b7b400d745015e2854b3b
     - path: training/model-best
-      md5: 33a374810115c89dbf2ea7e8b90d05ac
+      md5: 71b8725b21ab626ebed789f663657d46
   outs:
     - path: training/metrics.json
-      md5: 9c6c9e82ddc572ccd1c8d0b1603a83e5
+      md5: ec385875dbf7e5d1b8a419a59cbcec28
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
 argument:
@@ -77,9 +76,9 @@ augment:
       md5: af21e77dc294a7aa805e6e79df0ec8ec
   outs:
     - path: corpus/project_training.spacy
-      md5: 0359273fd8f77d609e5501933e5741f5
+      md5: fde6ab7f776806d5d36c93dbd43a8bf8
     - path: corpus/project_eval.spacy
-      md5: 08a16d326006c2bf45dc7766d934921a
+      md5: ab0708edd5d2bcb23236a0ecdc716f5e
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
 package:
@@ -89,9 +88,9 @@ package:
       0.0.1 --force
   deps:
     - path: training/model-best
-      md5: 33a374810115c89dbf2ea7e8b90d05ac
+      md5: 71b8725b21ab626ebed789f663657d46
   outs:
     - path: packages/en_ner_project-0.0.1/dist/en_ner_project-0.0.1.tar.gz
-      md5: eb38c2dd4c4040c298a8a504ae72e849
+      md5: 9e94001e0062fca3a472ccc5f412e2e3
   spacy_version: 3.2.3
   spacy_git_version: 99425de36
